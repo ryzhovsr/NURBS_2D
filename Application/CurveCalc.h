@@ -3,7 +3,7 @@
 class CurveCalc
 {
 public:
-    CurveCalc();
+    CurveCalc() {};
 
 
 };

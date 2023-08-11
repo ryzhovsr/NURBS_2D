@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CurveCalc.h"
 #include <vector>
 #include <QPointF>
 
@@ -12,10 +13,11 @@ struct CurvePoint
     int span;   // Номер интервала, к которому относится CurvePoint
 };
 
-class Curve
+class Curve : public CurveCalc
 {
 public:
-    Curve(const std::vector<QPointF> &controlPoints, const std::vector<double> &weights, int degree, int numRealRangePoints) noexcept;
+    Curve(const std::vector<QPointF> &controlPoints, const std::vector<double> &weights, int degree, int curveNumPoints) noexcept;
+    void calcCurve();
 
 private:
     std::vector<QPointF> _controlPoints;    // Точки определяющего многоугольника

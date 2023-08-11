@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "Curve.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -18,11 +17,11 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
+    const int CURVE_NUM_POINTS = 100;  // Кол-во точек, из которых будет состоять кривая
     const int DEGREE = 2;        // Степень кривой
-    const int NUM_POINTS = 100;  // Кол-во точек, из которых будет состоять кривая
 
-    Curve NURBS(CONTROL_POINTS, WEIGHTS, DEGREE, NUM_POINTS);
-
+    Curve curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
+    curve.calcCurve();
 }
 
 MainWindow::~MainWindow()
