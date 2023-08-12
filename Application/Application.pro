@@ -10,13 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     Curve.cpp \
-    CurveCalc.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     Curve.h \
-    CurveCalc.h \
     mainwindow.h
 
 FORMS += \

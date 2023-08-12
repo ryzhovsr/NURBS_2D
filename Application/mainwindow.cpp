@@ -20,8 +20,12 @@ MainWindow::MainWindow(QWidget *parent)
     const int CURVE_NUM_POINTS = 100;  // Кол-во точек, из которых будет состоять кривая
     const int DEGREE = 2;        // Степень кривой
 
-    Curve curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
-    curve.calcCurve();
+    Curve *curve = new Curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
+    curve->calcCurve();
+
+
+
+    delete curve;
 }
 
 MainWindow::~MainWindow()
