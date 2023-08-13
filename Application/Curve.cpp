@@ -78,6 +78,19 @@ void Curve::_checkNodalVector()
         qDebug() << "Error! _checkNodalVector: nodalVector.size()) != (numVertices + degreeCurve + 1)!";
 }
 
+<<<<<<< HEAD
+=======
+void Curve::calcCurve()
+{
+    for (int i = 0; i < _numRealRangePoints; ++i) // Итерируемся по каждой точке кривой
+    {
+        // Находим точку реальной части узл. вектора (параметр кривой ∈ [0, 1])
+        double realPoint = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
+        _calcCurvePointAndDerivs(_curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
+    }
+}
+
+>>>>>>> 4b0a5e3d749d6c22041b71f4578110020ea675cb
 void Curve::_calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint)
 {
     curvePoint.parameter = realPoint;

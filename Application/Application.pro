@@ -18,9 +18,13 @@ SOURCES += \
 HEADERS += \
     Curve.h \
     CurvePoint.h \
+<<<<<<< HEAD
     Graph2D.h \
     mainwindow.h \
     qcustomplot.h
+=======
+    mainwindow.h
+>>>>>>> 4b0a5e3d749d6c22041b71f4578110020ea675cb
 
 FORMS += \
     mainwindow.ui
