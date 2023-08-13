@@ -10,6 +10,14 @@ public:
 
     void calcCurve(); // Рассчитывает точки кривой
 
+    void setNodalVector(const std::vector<double> &nodalVector); // Устанавливает новый узловой вектор
+
+    std::vector<CurvePoint> getCurvePoints() const noexcept;    // Возвращает точки кривой
+    std::vector<QPointF> getControlPoints() const noexcept;     // Возвращает контрольные точки
+    std::vector<double> getNodalVector() const noexcept;        // Возвращает узловой вектор
+    std::vector<double> getWeights() const noexcept;            // Возвращает весовые коэффициенты точек определяющего многоугольника
+    int getDegree() const noexcept;                             // Возвращает степень кривой
+
 private:
     std::vector<CurvePoint> _curvePoints;   // Точки кривой
     std::vector<QPointF> _controlPoints;    // Точки определяющего многоугольника
@@ -22,7 +30,7 @@ private:
     int _numKnots;      // Кол-во узлов в узл. векторе
     int _degree;        // Степень кривой
 
-    void _checkNodalVector(); // Проверяет узловой вектор на соответствие
+    void _checkNodalVector(); // Проверяет узловой вектор на соответствие правил
 
     // Методы для расчёта точек кривой
     void _calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint);     // Вычисляет точку кривой и её производные

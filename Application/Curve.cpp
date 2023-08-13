@@ -25,6 +25,46 @@ Curve::Curve(const std::vector<QPointF> &controlPoints, const std::vector<double
 
     _checkNodalVector();
 }
+void Curve::calcCurve()
+{
+    for (int i = 0; i < _numRealRangePoints; ++i) // Итерируемся по каждой точке кривой
+    {
+        // Находим точку реальной части узл. вектора (параметр кривой ∈ [0, 1])
+        double realPoint = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
+        _calcCurvePointAndDerivs(_curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
+    }
+}
+
+void Curve::setNodalVector(const std::vector<double> &nodalVector)
+{
+    _nodalVector = nodalVector;
+    _checkNodalVector();
+}
+
+std::vector<CurvePoint> Curve::getCurvePoints() const noexcept
+{
+    return _curvePoints;
+}
+
+std::vector<QPointF> Curve::getControlPoints() const noexcept
+{
+    return _controlPoints;
+}
+
+std::vector<double> Curve::getNodalVector() const noexcept
+{
+    return _nodalVector;
+}
+
+std::vector<double> Curve::getWeights() const noexcept
+{
+    return _weights;
+}
+
+int Curve::getDegree() const noexcept
+{
+    return _degree;
+}
 
 void Curve::_checkNodalVector()
 {
@@ -36,16 +76,6 @@ void Curve::_checkNodalVector()
 
     if (_numKnots != (_numVertices + _degree + 1))
         qDebug() << "Error! _checkNodalVector: nodalVector.size()) != (numVertices + degreeCurve + 1)!";
-}
-
-void Curve::calcCurve()
-{
-    for (int i = 0; i < _numRealRangePoints; ++i) // Итерируемся по каждой точке кривой
-    {
-        // Находим точку реальной части узл. вектора (параметр кривой ∈ [0, 1])
-        double realPoint = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
-        _calcCurvePointAndDerivs(_curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
-    }
 }
 
 void Curve::_calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint)
