@@ -175,13 +175,13 @@ void Graph2D::drawTangentToCurve(const CurvePoint &curvePoint, const QColor &col
 }
 
 /*
-void Graph2D::drawNormalsBetweenCurves(const Curve &curve1, const NURBS &curve2, const QColor &color) const noexcept
+void Graph2D::drawNormalsBetweenCurves(const Curve &curve1, const Curve &curve2, const QColor &color, int step) const noexcept
 {
-    for (size_t i = 0; i < curve2.getPointsNURBS().size(); i += 2)
+    for (int i = 0; i < curve2.getCurvePoints().size(); i += step)
     {
-        CurvePoint nearestPoint = curve1.findPointNURBS(curve2.getPointsNURBS()[i].point);
-        // Рисуем прямые между точками двумя кривымии (перпендикуляры)
-        drawLine(Point(curve2.getPointsNURBS()[i].point.x, curve2.getPointsNURBS()[i].point.y), Point(nearestPoint.point.x, nearestPoint.point.y), color);
+        CurvePoint nearestPoint = curve1.findPointNURBS(curve2.getCurvePoints()[i].point);
+        drawLine(curve2.getCurvePoints()[i].point.x(), curve2.getCurvePoints()[i].point.y(), nearestPoint.point.x(), nearestPoint.point.y(), color);
     }
 }
 */
+

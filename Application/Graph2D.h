@@ -47,7 +47,7 @@ public:
     void drawTangentToCurve(const CurvePoint &curvePoint, const QColor &color = QColor(0, 0, 0), double width = 2.8) const noexcept;
 
     // Рисует перпендикуляры между кривыми
-    //void drawNormalsBetweenCurves(const Curve &curve1, const Curve &curve2, const QColor &color = QColor(0, 0, 0)) const noexcept;
+    void drawNormalsBetweenCurves(const Curve &curve1, const Curve &curve2, const QColor &color = QColor(0, 0, 0), int step = 4) const noexcept;
 
 private:
     QCustomPlot *_canvas; // Указатель на окно для рисования
