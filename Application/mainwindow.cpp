@@ -17,16 +17,15 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
-    const int CURVE_NUM_POINTS = 100;  // Кол-во точек, из которых будет состоять кривая
-    const int DEGREE = 2;        // Степень кривой
+    const int CURVE_NUM_POINTS = 100;   // Кол-во точек, из которых будет состоять кривая
+    const int DEGREE = 2;   // Степень кривой
 
-    Curve *curve = new Curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
-    curve->calcCurve();
+    Curve curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
+    curve.calcCurve();
 
-    Graph2D *canvas = new Graph2D(ui->canvas, "");
-    canvas->drawCurve(*curve, "Кривая NURBS");
-
-    delete curve, canvas;
+    Graph2D canvas(ui->canvas);
+    canvas.drawCurve(curve, "Кривая NURBS", QColor(20, 150, 30));
+    canvas.drawDefiningPolygon(curve.getControlPoints(), "Определяющий многоугольник");
 }
 
 MainWindow::~MainWindow()
