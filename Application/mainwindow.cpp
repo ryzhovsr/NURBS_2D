@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "Curve.h"
+#include "Graph2D.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -23,7 +23,10 @@ MainWindow::MainWindow(QWidget *parent)
     Curve *curve = new Curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
     curve->calcCurve();
 
-    delete curve;
+    Graph2D *canvas = new Graph2D(ui->canvas, "");
+    canvas->drawCurve(*curve, "Кривая NURBS");
+
+    delete curve, canvas;
 }
 
 MainWindow::~MainWindow()

@@ -1,6 +1,6 @@
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets printsupport
 
 CONFIG += c++17
 
@@ -10,13 +10,17 @@ CONFIG += c++17
 
 SOURCES += \
     Curve.cpp \
+    Graph2D.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    qcustomplot.cpp
 
 HEADERS += \
     Curve.h \
     CurvePoint.h \
-    mainwindow.h
+    Graph2D.h \
+    mainwindow.h \
+    qcustomplot.h
 
 FORMS += \
     mainwindow.ui
