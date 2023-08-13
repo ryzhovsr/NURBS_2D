@@ -15,6 +15,7 @@ SOURCES += \
 
 HEADERS += \
     Curve.h \
+    CurvePoint.h \
     mainwindow.h
 
 FORMS += \

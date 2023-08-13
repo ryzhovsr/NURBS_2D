@@ -1,16 +1,7 @@
 #pragma once
 
+#include "CurvePoint.h"
 #include <vector>
-#include <QPointF>
-
-struct CurvePoint
-{
-    QPointF point;        // Координаты точки кривой
-    QPointF firstDeriv;   // Координаты 1-ой производной
-    QPointF secondDeriv;  // Координаты 2-ой производной
-    double parameter;     // Элемент реальной части узлового вектора
-    int span;   // Номер интервала, к которому относится CurvePoint
-};
 
 class Curve
 {
@@ -34,15 +25,13 @@ private:
     void _checkNodalVector(); // Проверяет узловой вектор на соответствие
 
     // Методы для расчёта точек кривой
-    void _calcCurvePointAndItsDerivs(CurvePoint &curvePoint, double realPoint);     // Заменить название!!!!!!!!!!!
-    int _findSpanForRealPoint(double realPoint);    // Находит номер злового промежутка (спан) для точки реального диапазона узл. вектора
-    void _calcBasisFuncsAndTheirDerivs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, double realPoint, double span);    // Вычисляет базисные функции и их производные
-    void _calcBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, double realPoint, double span);
-    void _calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage);
-
-    void _calcCurvePoint(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double& denominator, QPointF &n0);
-    void calcFirstDerivCurve(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
-    void calcSecondDerivCurve(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
-
-
+    void _calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint);     // Вычисляет точку кривой и её производные
+    int _findSpanForRealPoint(double realPoint);    // Находит номер узлового промежутка (спан) для точки реального диапазона узл. вектора
+    std::vector<std::vector<double>> _calcBasisFuncsAndTheirDerivs(double realPoint, double span);    // Вычисляет базисные функции и их производные
+    void _calcBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, double realPoint, double span); // Вычисляет базисные функции
+    void _calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage);  // Вычисляет производные базисных функций
+    void calcPointCurve(const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0); // Вычисляет точку кривой
+    // Вычисляют первую и вторую производные в точке кривой
+    void _calcPointFirstDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
+    void _calcPointSecondDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
 };
