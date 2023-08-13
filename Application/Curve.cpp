@@ -44,33 +44,31 @@ void Curve::calcCurve()
     {
         // Находим точку реальной части узл. вектора (параметр кривой ∈ [0, 1])
         double realPoint = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
-        _calcCurvePointAndItsDerivs(_curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
+        _calcCurvePointAndDerivs(_curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
     }
 }
 
-void Curve::_calcCurvePointAndItsDerivs(CurvePoint &curvePoint, double realPoint)
+void Curve::_calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint)
 {
     curvePoint.parameter = realPoint;
     curvePoint.span = _findSpanForRealPoint(realPoint); // Вычисляем узловой промежуток (спан) для заданной точки
 
-    std::vector<std::vector<double>> basisFuncsAndTheirDerivs(_degree + 1, std::vector<double>(_degree + 1)); // Содержит базисные функции и их производные
-
-    _calcBasisFuncsAndTheirDerivs(basisFuncsAndTheirDerivs, realPoint, curvePoint.span); // Вычисляем базисные функции и их производные
+    std::vector<std::vector<double>> basisFuncsAndTheirDerivs = _calcBasisFuncsAndTheirDerivs(realPoint, curvePoint.span); // Вычисляем базисные функции и их производные
 
     double denominator = 0;
     QPointF n0;
 
-    _calcCurvePoint(basisFuncsAndTheirDerivs, curvePoint, denominator, n0); // Рассчитываем точку кривой
+    calcPointCurve(basisFuncsAndTheirDerivs, curvePoint, denominator, n0); // Рассчитываем точку кривой
 
     QPointF n1;
     double n2 = 0;
 
-    calcFirstDerivCurve(basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 1-ую производную
+    _calcPointFirstDeriv(basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 1-ую производную
 
     if (_degree == 1) // Если степень кривой = 1, то выходим из функции
         return;
 
-    calcSecondDerivCurve(basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 2-ую производную
+    _calcPointSecondDeriv(basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 2-ую производную
 }
 
 int Curve::_findSpanForRealPoint(double realPoint)
@@ -101,12 +99,13 @@ int Curve::_findSpanForRealPoint(double realPoint)
     return middle;
 }
 
-void Curve::_calcBasisFuncsAndTheirDerivs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, double realPoint, double span)
+std::vector<std::vector<double>> Curve::_calcBasisFuncsAndTheirDerivs(double realPoint, double span)
 {
+    std::vector<std::vector<double>> basisFuncsAndTheirDerivs(_degree + 1, std::vector<double>(_degree + 1));
     std::vector<std::vector<double>> tempStorage(_degree + 1, std::vector<double>(_degree + 1));    // Для хранения базисных функций и узлов различия
 
     _calcBasisFuncs(basisFuncsAndTheirDerivs, tempStorage, realPoint, span);    // Вычисляем базиные функции
-    _calcDerivsBasisFuncs(basisFuncsAndTheirDerivs, tempStorage);               // Вычисляем производные ненулевых базиных функций
+    _calcDerivsBasisFuncs(basisFuncsAndTheirDerivs, tempStorage);               // Вычисляем производные базиных функций
 
     double sum = 0;
 
@@ -115,45 +114,8 @@ void Curve::_calcBasisFuncsAndTheirDerivs(std::vector<std::vector<double>> &basi
 
     if (sum < (1 - 1e-10) || (sum > 1 + 1e-10)) // Если сумма базисных функций не равна 1
         qDebug() << "Error! _calcBasisFuncsAndTheirDerivs: Сумма базисных функций != 1!";
-}
 
-void Curve::_calcCurvePoint(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0)
-{
-    for (int i = 0; i < _degree + 1; ++i)
-    {
-        n0 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[0][i];
-        denominator += basisFuncsAndTheirDerivs[0][i] * _weights[curvePoint.span - _degree + i];
-    }
-
-    curvePoint.point = n0 / denominator;
-}
-
-void Curve::calcFirstDerivCurve(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
-{
-    for (int i = 0; i < _degree + 1; ++i)
-    {
-        n1 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[1][i];
-        n2 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[1][i];
-    }
-
-    curvePoint.firstDeriv = n1 / denominator - (n0 * n2) / (denominator * denominator);
-}
-
-void Curve::calcSecondDerivCurve(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
-{
-    QPointF n3;
-    double n4 = 0;
-
-    for (int i = 0; i < _degree + 1; ++i)
-    {
-        n3 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[2][i];
-        n4 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[2][i];
-    }
-
-    QPointF s1 = n3 / denominator - (n1 * n2) / (denominator * denominator);
-    QPointF s2 = (n1 * n2 + n0 * n4) / (denominator * denominator) - (n1 * n2 * 2 * n2) / (pow(denominator, 4));
-
-    curvePoint.secondDeriv = s1 - s2;
+    return basisFuncsAndTheirDerivs;
 }
 
 void Curve::_calcBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, double realPoint, double span)
@@ -249,4 +211,43 @@ void Curve::_calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAn
 
         k *= _degree - i;
     }
+}
+
+void Curve::calcPointCurve(const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0)
+{
+    for (int i = 0; i < _degree + 1; ++i)
+    {
+        n0 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFunctionsAndTheirDerivs[0][i];
+        denominator += basisFunctionsAndTheirDerivs[0][i] * _weights[curvePoint.span - _degree + i];
+    }
+
+    curvePoint.point = n0 / denominator;
+}
+
+void Curve::_calcPointFirstDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
+{
+    for (int i = 0; i < _degree + 1; ++i)
+    {
+        n1 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[1][i];
+        n2 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[1][i];
+    }
+
+    curvePoint.firstDeriv = n1 / denominator - (n0 * n2) / (denominator * denominator);
+}
+
+void Curve::_calcPointSecondDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
+{
+    QPointF n3;
+    double n4 = 0;
+
+    for (int i = 0; i < _degree + 1; ++i)
+    {
+        n3 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[2][i];
+        n4 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[2][i];
+    }
+
+    QPointF s1 = n3 / denominator - (n1 * n2) / (denominator * denominator);
+    QPointF s2 = (n1 * n2 + n0 * n4) / (denominator * denominator) - (n1 * n2 * 2 * n2) / (pow(denominator, 4));
+
+    curvePoint.secondDeriv = s1 - s2;
 }
