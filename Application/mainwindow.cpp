@@ -23,8 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
     Curve *curve = new Curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
     curve->calcCurve();
 
-
-
     delete curve;
 }
 
