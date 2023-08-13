@@ -17,8 +17,8 @@ SOURCES += \
 
 HEADERS += \
     Curve.h \
-    CurvePoint.h \
     Graph2D.h \
+    CurvePoint.h \
     mainwindow.h \
     qcustomplot.h
 
