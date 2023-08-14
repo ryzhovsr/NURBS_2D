@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     Curve.cpp \
     Graph2D.cpp \
+    MathUtils.cpp \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp
@@ -19,6 +20,7 @@ HEADERS += \
     Curve.h \
     Graph2D.h \
     CurvePoint.h \
+    MathUtils.h \
     mainwindow.h \
     qcustomplot.h
 
