@@ -12,6 +12,7 @@ SOURCES += \
     Curve.cpp \
     Graph2D.cpp \
     MathUtils.cpp \
+    Metrics.cpp \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp
@@ -21,6 +22,7 @@ HEADERS += \
     Graph2D.h \
     CurvePoint.h \
     MathUtils.h \
+    Metrics.h \
     mainwindow.h \
     qcustomplot.h
 

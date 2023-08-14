@@ -1,6 +1,5 @@
 #pragma once
 
-#include <QPointF>
 #include "CurvePoint.h"
 
 class MathUtils
