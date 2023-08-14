@@ -184,4 +184,3 @@ void Graph2D::drawNormalsBetweenCurves(const Curve &curve1, const Curve &curve2,
     }
 }
 */
-
