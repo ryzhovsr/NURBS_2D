@@ -2,8 +2,8 @@
 #include "ui_mainwindow.h"
 #include "Graph2D.h"
 #include "Metrics.h"
-#include "NativeApproxAlg.h"
-#include "ApproxAlgBasedIntegralNorm.h"
+#include "NativeAlg.h"
+#include "AlgBasedIntegralNorm.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(curve1, "Кривая 1", QColor(20, 150, 30));
     canvas.drawDefiningPolygon(curve1.getControlPoints(), "Определяющий многоугольник");
 
-    ApproxAlgBasedIntegralNorm approxAlg;
+    AlgBasedIntegralNorm approxAlg;
     Curve curve2 = approxAlg.approximateCurve(curve1, DEGREE - 1);
 
     canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));

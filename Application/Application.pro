@@ -9,7 +9,8 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    ApproxAlgBasedIntegralNorm.cpp \
+    AlgBasedCurveConjugation.cpp \
+    AlgBasedIntegralNorm.cpp \
     CalcCurve.cpp \
     Curve.cpp \
     EigenMatrixOperations.cpp \
@@ -18,13 +19,14 @@ SOURCES += \
     IMatrixOperations.cpp \
     MathUtils.cpp \
     Metrics.cpp \
-    NativeApproxAlg.cpp \
+    NativeAlg.cpp \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp
 
 HEADERS += \
-    ApproxAlgBasedIntegralNorm.h \
+    AlgBasedCurveConjugation.h \
+    AlgBasedIntegralNorm.h \
     CalcCurve.h \
     Curve.h \
     EigenMatrixOperations.h \
@@ -34,7 +36,7 @@ HEADERS += \
     IMatrixOperations.h \
     MathUtils.h \
     Metrics.h \
-    NativeApproxAlg.h \
+    NativeAlg.h \
     mainwindow.h \
     qcustomplot.h
 

@@ -1,9 +1,9 @@
-#include "ApproxAlgBasedIntegralNorm.h"
+#include "AlgBasedIntegralNorm.h"
 #include <qDebug>
 #include "IMatrixOperations.h"
 #include "CalcCurve.h"
 
-Curve ApproxAlgBasedIntegralNorm::approximateCurve(const Curve &curve, int degreeApprox) const
+Curve AlgBasedIntegralNorm::approximateCurve(const Curve &curve, int degreeApprox) const
 {
     int newNumControlPoints = degreeApprox + 1;
 
@@ -24,7 +24,7 @@ Curve ApproxAlgBasedIntegralNorm::approximateCurve(const Curve &curve, int degre
     return  Curve(controlPointsNewCurve, newWeights, degreeApprox, static_cast<int>(curve.getCurvePoints().size()));
 }
 
-std::vector<std::vector<double>> ApproxAlgBasedIntegralNorm::calcNewControlsPointsIntegralsMethod(const Curve &originalCurve, int newNumControlPoints, int newDegreeCurve) const
+std::vector<std::vector<double>> AlgBasedIntegralNorm::calcNewControlsPointsIntegralsMethod(const Curve &originalCurve, int newNumControlPoints, int newDegreeCurve) const
 {
     const double NUMBER_INTEGRALS = 200; // Количество разбиений на интегралы
     const double DELTA = 1 / NUMBER_INTEGRALS;
@@ -99,7 +99,7 @@ std::vector<std::vector<double>> ApproxAlgBasedIntegralNorm::calcNewControlsPoin
     return newPoints;
 }
 
-std::vector<double> ApproxAlgBasedIntegralNorm::createUniformNodalVector(int numControlPoints, int degreeCurve)
+std::vector<double> AlgBasedIntegralNorm::createUniformNodalVector(int numControlPoints, int degreeCurve)
 {
     int numKnots = numControlPoints + degreeCurve + 1;
     int numRealRangeKnots = numControlPoints - degreeCurve + 1;

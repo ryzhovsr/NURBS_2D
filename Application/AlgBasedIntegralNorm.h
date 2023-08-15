@@ -2,7 +2,7 @@
 
 #include "IApproxAlgs.h"
 
-class ApproxAlgBasedIntegralNorm : public IApproxAlgs
+class AlgBasedIntegralNorm : public IApproxAlgs
 {
 public:
     // Аппроксимирует кривую и создаёт из неё кривую Безье с заданным количеством точек
