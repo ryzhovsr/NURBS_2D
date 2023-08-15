@@ -2,7 +2,7 @@
 #include "ui_mainwindow.h"
 #include "Graph2D.h"
 #include "Metrics.h"
-
+#include "NativeApproxAlg.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -28,13 +28,14 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(curve1, "Кривая 1", QColor(20, 150, 30));
     canvas.drawDefiningPolygon(curve1.getControlPoints(), "Определяющий многоугольник");
 
-    Curve curve2(CONTROL_POINTS, WEIGHTS, DEGREE - 1, CURVE_NUM_POINTS);
-     canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));
+    NativeApproxAlg a;
+    Curve curve2 = a.approximateCurve(curve1, DEGREE - 1);
+
+    canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));
 
     const double DISTANSE_1 = Metrics::calcHausdorffMetric(curve1, curve2);
     qDebug() << DISTANSE_1;
 }
-
 
 /*
 // Пример построения с крылом 1

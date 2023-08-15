@@ -9,20 +9,24 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    ApproxAlgs.cpp \
     Curve.cpp \
     Graph2D.cpp \
     MathUtils.cpp \
     Metrics.cpp \
+    NativeApproxAlg.cpp \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp
 
 HEADERS += \
+    ApproxAlgs.h \
     Curve.h \
     Graph2D.h \
     CurvePoint.h \
     MathUtils.h \
     Metrics.h \
+    NativeApproxAlg.h \
     mainwindow.h \
     qcustomplot.h
 
