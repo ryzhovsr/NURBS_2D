@@ -2,7 +2,7 @@
 
 #include "Curve.h"
 
-class ApproxAlgs
+class IApproxAlgs
 {
 public:
     virtual Curve approximateCurve(const Curve &curve, int degreeApprox) const = 0; // Аппрроксимирует кривую до степени degreeApprox

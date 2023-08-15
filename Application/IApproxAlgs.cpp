@@ -1,7 +1,7 @@
-#include "ApproxAlgs.h"
+#include "IApproxAlgs.h"
 #include <QDebug>
 
-void ApproxAlgs::checkDegreeApprox(const Curve &curve, int degreeApprox) const
+void IApproxAlgs::checkDegreeApprox(const Curve &curve, int degreeApprox) const
 {
     if (curve.getDegree() < degreeApprox)
         qDebug() << "Error! checkDegreeApprox: Степень исходной кривой больше степени аппроксимирующей кривой!";

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ApproxAlgs.h"
+#include "IApproxAlgs.h"
 
-class ApproxAlgBasedIntegralNorm : public ApproxAlgs
+class ApproxAlgBasedIntegralNorm : public IApproxAlgs
 {
 public:
     // Аппроксимирует кривую и создаёт из неё кривую Безье с заданным количеством точек

@@ -10,11 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     ApproxAlgBasedIntegralNorm.cpp \
-    ApproxAlgs.cpp \
     CalcCurve.cpp \
     Curve.cpp \
     EigenMatrixOperations.cpp \
     Graph2D.cpp \
+    IApproxAlgs.cpp \
     IMatrixOperations.cpp \
     MathUtils.cpp \
     Metrics.cpp \
@@ -25,12 +25,12 @@ SOURCES += \
 
 HEADERS += \
     ApproxAlgBasedIntegralNorm.h \
-    ApproxAlgs.h \
     CalcCurve.h \
     Curve.h \
     EigenMatrixOperations.h \
     Graph2D.h \
     CurvePoint.h \
+    IApproxAlgs.h \
     IMatrixOperations.h \
     MathUtils.h \
     Metrics.h \

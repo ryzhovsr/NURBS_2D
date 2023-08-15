@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ApproxAlgs.h"
+#include "IApproxAlgs.h"
 
-class NativeApproxAlg : public ApproxAlgs
+class NativeApproxAlg : public IApproxAlgs
 {
 public:
     Curve approximateCurve(const Curve &curve, int degreeApprox) const override; // Аппрроксимирует кривую до степени degreeApprox
