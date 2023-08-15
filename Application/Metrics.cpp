@@ -19,6 +19,11 @@ double Metrics::calcCurveCurvature(const std::vector<CurvePoint> &curvePoints)
     return square;
 }
 
+double Metrics::calcCurveCurvature(const Curve &curve)
+{
+    return calcCurveCurvature(curve.getCurvePoints());
+}
+
 double Metrics::calcHausdorffMetric(const Curve &Curve1, const Curve &Curve2)
 {
     //double distanceFromFirstCurve = temp.findMaxLenBetweenCurves(Curve1, Curve2);    // Расстояние от первой кривой ко второй кривой

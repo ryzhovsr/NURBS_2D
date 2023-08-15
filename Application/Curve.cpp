@@ -24,6 +24,7 @@ Curve::Curve(const std::vector<QPointF> &controlPoints, const std::vector<double
         _nodalVector[i] = 1;
 
     _checkNodalVector();
+    calcCurve();
 }
 
 void Curve::setNodalVector(const std::vector<double> &nodalVector)

@@ -11,26 +11,25 @@ MainWindow::MainWindow(QWidget *parent)
 
     const std::vector<QPointF> CONTROL_POINTS   // Контрольные точки определяющего многоугольника
     {
-        {2, 2},
-        {2.5, 3.9},
-        {5.6, 3.9},
-        {6.25, 1.3},
-        {7.5, 2.6}
+        {3, 5},
+        {6, 7},
+        {9, 3},
+        {12, 6},
+        {15, 5}
     };
 
     const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
     const int CURVE_NUM_POINTS = 100;   // Кол-во точек, из которых будет состоять кривая
-    const int DEGREE = 3;   // Степень кривой
+    const int DEGREE = 4;   // Степень кривой
 
     Curve curve1(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
-    curve1.calcCurve();
 
     Graph2D canvas(ui->canvas);
-    canvas.drawCurve(curve1, "Кривая NURBS", QColor(20, 150, 30));
+    canvas.drawCurve(curve1, "Кривая 1", QColor(20, 150, 30));
     canvas.drawDefiningPolygon(curve1.getControlPoints(), "Определяющий многоугольник");
 
     Curve curve2(CONTROL_POINTS, WEIGHTS, DEGREE - 1, CURVE_NUM_POINTS);
-    curve2.calcCurve();
+     canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));
 
     const double DISTANSE_1 = Metrics::calcHausdorffMetric(curve1, curve2);
     qDebug() << DISTANSE_1;
