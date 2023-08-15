@@ -1,5 +1,4 @@
-#ifndef CALCCURVE_H
-#define CALCCURVE_H
+#pragma once
 
 #include <vector>
 #include <QPointF>
@@ -24,5 +23,3 @@ public:
     static void calcPointFirstDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
     static void calcPointSecondDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
 };
-
-#endif // CALCCURVE_H

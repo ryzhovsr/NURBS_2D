@@ -32,6 +32,7 @@ private:
 
     void _checkNodalVector(); // Проверяет узловой вектор на соответствие правил
 
+    /*
     // Методы для расчёта точек кривой
     void _calcCurvePointAndDerivs(CurvePoint &curvePoint, double realPoint);     // Вычисляет точку кривой и её производные
     int _findSpanForRealPoint(double realPoint);    // Находит номер узлового промежутка (спан) для точки реального диапазона узл. вектора
@@ -42,4 +43,5 @@ private:
     // Вычисляют первую и вторую производные в точке кривой
     void _calcPointFirstDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
     void _calcPointSecondDeriv(const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
+*/
 };
