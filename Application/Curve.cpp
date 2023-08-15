@@ -261,7 +261,7 @@ void Curve::_calcPointFirstDeriv(const std::vector<std::vector<double>> &basisFu
     for (int i = 0; i < _degree + 1; ++i)
     {
         n1 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[1][i];
-        n2 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[1][i];
+        n2 += _weights[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[1][i];
     }
 
     curvePoint.firstDeriv = n1 / denominator - (n0 * n2) / (denominator * denominator);
@@ -275,7 +275,7 @@ void Curve::_calcPointSecondDeriv(const std::vector<std::vector<double>> &basisF
     for (int i = 0; i < _degree + 1; ++i)
     {
         n3 += _weights[curvePoint.span - _degree + i] * _controlPoints[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[2][i];
-        n4 += _weights[curvePoint.span - _degree +i] * basisFuncsAndTheirDerivs[2][i];
+        n4 += _weights[curvePoint.span - _degree + i] * basisFuncsAndTheirDerivs[2][i];
     }
 
     QPointF s1 = n3 / denominator - (n1 * n2) / (denominator * denominator);
