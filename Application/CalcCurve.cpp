@@ -31,7 +31,7 @@ int CalcCurve::findSpanForParameter(double parameter, const std::vector<double> 
 
     if (parameter < nodalVector[degree] || parameter > nodalVector[numKnots - degree - 1]) // Если parameter выходит за реальный диапазон узл. вектора
     {
-        qDebug() << "Error! _findSpanForRealPoint: parameter вышел за реальный диапазон!";
+        qDebug() << "Error! findSpanForParameter: parameter вышел за реальный диапазон!";
         return -1;
     }
 

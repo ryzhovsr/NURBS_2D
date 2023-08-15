@@ -76,7 +76,7 @@ void Curve::calcCurve()
     for (int i = 0; i < _numRealRangePoints; ++i) // Итерируемся по каждой точке кривой
     {
         // Находим точку реальной части узл. вектора (параметр кривой ∈ [0, 1])
-        double realPoint = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
-        CalcCurve::calcCurvePointAndDerivs(*this, _curvePoints[i], realPoint); // Рассчитываем точку кривой и её первую и вторую производную
+        double parameter = static_cast<double>(i) / (_numRealRangePoints - 1) * (_nodalVector[_realRangeEnd] - _nodalVector[_realRangeStart]) + _nodalVector[_realRangeStart];
+        CalcCurve::calcCurvePointAndDerivs(*this, _curvePoints[i], parameter); // Рассчитываем точку кривой и её первую и вторую производную
     }
 }

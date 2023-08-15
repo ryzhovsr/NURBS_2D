@@ -17,4 +17,3 @@ public:
     // Рассчитывает квадратичную разность между двух кривых
     static double calcQuadraticDifference(const Curve &Curve1, const Curve &Curve2);
 };
-

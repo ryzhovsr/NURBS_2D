@@ -7,17 +7,23 @@
 class CalcCurve
 {
 public:
-    static void calcCurvePointAndDerivs(const Curve &curve, CurvePoint &curvePoint, double realPoint);     // Вычисляет точку кривой и её производные
+    // Вычисляет точку кривой и её производные
+    static void calcCurvePointAndDerivs(const Curve &curve, CurvePoint &curvePoint, double parameter);
 
-    static int findSpanForParameter(double parameter, const std::vector<double> &nodalVector, int degree);    // Находит номер узлового промежутка (спан) для точки реального диапазона узл. вектора - параметра
+    // Находит номер узлового промежутка (спан) для точки реального диапазона узл. вектора - параметра
+    static int findSpanForParameter(double parameter, const std::vector<double> &nodalVector, int degree);
 
-    static std::vector<std::vector<double>> calcBasisFuncsAndTheirDerivs(const std::vector<double>& nodalVector, double parameter, int span, int degree);    // Вычисляет базисные функции и их производные
+    // Вычисляет базисные функции и их производные
+    static std::vector<std::vector<double>> calcBasisFuncsAndTheirDerivs(const std::vector<double>& nodalVector, double parameter, int span, int degree);
 
-    static void calcBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, const std::vector<double>& nodalVector, double parameter, int span, int degree); // Вычисляет базисные функции
+    // Вычисляет базисные функции
+    static void calcBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, const std::vector<double>& nodalVector, double parameter, int span, int degree);
 
-    static void calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, int degree);  // Вычисляет производные базисных функций
+    // Вычисляет производные базисных функций
+    static void calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, int degree);
 
-    static void calcPointCurve(const Curve &curve, const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0); // Вычисляет точку кривой
+    // Вычисляет точку кривой
+    static void calcPointCurve(const Curve &curve, const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0);
 
     // Вычисляют первую и вторую производные в точке кривой
     static void calcPointFirstDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);

@@ -7,7 +7,7 @@ IMatrixOperationsPtr IMatrixOperations::GetMatrixOperationsClass(OperationClass 
     {
     case eigen:
         return std::make_shared<EigenMatrixOperations>();
-    /*
+    /* Для библиотеки MKL
     case mkl:
         return std::make_shared<MKLMatrixOperations>();
     */
