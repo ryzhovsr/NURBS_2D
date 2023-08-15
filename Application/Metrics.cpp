@@ -1,4 +1,5 @@
 #include "Metrics.h"
+#include "MathUtils.h"
 #include <QDebug>
 
 double Metrics::calcCurveCurvature(const std::vector<CurvePoint> &curvePoints)
@@ -20,10 +21,10 @@ double Metrics::calcCurveCurvature(const std::vector<CurvePoint> &curvePoints)
 
 double Metrics::calcHausdorffMetric(const Curve &Curve1, const Curve &Curve2)
 {
-    double distanceFromFirstCurve = findMaxLenBetweenCurves(Curve1, Curve2);    // Находим наибольшее расстояние от первой кривой ко второй кривой
-    double distanceFromSecondCurve = findMaxLenBetweenCurves(Curve2, Curve1);   // Находим наибольшее расстояние от второй кривой к первой кривой
+    //double distanceFromFirstCurve = temp.findMaxLenBetweenCurves(Curve1, Curve2);    // Расстояние от первой кривой ко второй кривой
+    //double distanceFromSecondCurve = temp.findMaxLenBetweenCurves(Curve2, Curve1);   // Расстояние от второй кривой к первой кривой
 
-    return distanceFromFirstCurve > distanceFromSecondCurve ? distanceFromFirstCurve : distanceFromSecondCurve;
+    return 1; //distanceFromFirstCurve > distanceFromSecondCurve ? distanceFromFirstCurve : distanceFromSecondCurve;
 }
 
 double Metrics::calcQuadraticDifference(const Curve &Curve1, const Curve &Curve2)

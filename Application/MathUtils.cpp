@@ -21,9 +21,9 @@ double MathUtils::calcVectorLenght(const QPointF &point1, const QPointF &point2)
     return calcVectorLenght(point1.x(), point1.y(), point2.x(), point2.y());
 }
 
-double MathUtils::calcVectorLenght(const QPointF &point1, const CurvePoint &point2)
+double MathUtils::calcVectorLenght(const CurvePoint &point1, const QPointF &point2)
 {
-    return calcVectorLenght(point1.x(), point1.y(), point2.point.x(), point2.point.y());
+    return calcVectorLenght(point1.point.x(), point1.point.y(), point2.x(), point2.y());
 }
 
 double MathUtils::calcAngleBetweenVectors(const QPointF &vecStart1, const QPointF &vecEnd1, const QPointF &vecStart2, const QPointF &vecEnd2)
