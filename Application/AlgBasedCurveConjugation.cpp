@@ -5,21 +5,25 @@
 #include "IMatrixOperations.h"
 
 Curve AlgBasedCurveConjugation::approximateCurve(const Curve &curve, int degreeApprox) const
-{ // СТЕПЕНЬ ИСХОДНОЙ КРИВОЙ ДОЛЖНА БЫТЬ НА 2 МЕНЬШЕ
+{
+    int initialDegree = curve.getDegree(); // Исходная степень кривой
+
+    if (curve.getControlPoints().size() - initialDegree != 2)
+        qDebug() << "Error! AlgBasedCurveConjugation: степень кривой должна быть на 2 меньше кол-ва контрольных точек!";
+
     Curve tempCurve = curve;
-    int degree = tempCurve.getDegree();
     int numParameters = static_cast<int>(tempCurve.getCurvePoints().size());
 
     addNodalPoints(tempCurve);
 
     std::vector<QPointF> tempControlPoints = tempCurve.getControlPoints();
 
-    std::vector<QPointF> controlPointsBezier_1(tempControlPoints.begin(), tempControlPoints.end() -  degree);
-    std::vector<QPointF> controlPointsBezier_2(tempControlPoints.begin() + degree, tempControlPoints.end());
+    std::vector<QPointF> controlPointsBezier_1(tempControlPoints.begin(), tempControlPoints.end() -  initialDegree);
+    std::vector<QPointF> controlPointsBezier_2(tempControlPoints.begin() + initialDegree, tempControlPoints.end());
     std::vector<double> newWeights(controlPointsBezier_1.size(), 1);
 
-    Curve bezier1(controlPointsBezier_1, newWeights, degree, numParameters);
-    Curve bezier2(controlPointsBezier_2, newWeights, degree, numParameters);
+    Curve bezier1(controlPointsBezier_1, newWeights, initialDegree, numParameters);
+    Curve bezier2(controlPointsBezier_2, newWeights, initialDegree, numParameters);
 
     reductBezierCurveDegree(bezier1);
     reductBezierCurveDegree(bezier2);
@@ -29,7 +33,7 @@ Curve AlgBasedCurveConjugation::approximateCurve(const Curve &curve, int degreeA
 
     for (int currentDegree = tempCurve.getDegree(); currentDegree > degreeApprox; --currentDegree)
     {
-        tempCurve = addMultipleKnot(tempCurve); // Добавляем кратный узел в кривую
+        tempCurve = redefineControlPointsNodalVectorCurve(tempCurve); // Добавляем кратный узел в кривую
 
         tempControlPoints = tempCurve.getControlPoints();
         std::vector<QPointF> tempControlPoints_1(tempControlPoints.begin(), tempControlPoints.end() -  tempCurve.getDegree());
@@ -50,17 +54,19 @@ Curve AlgBasedCurveConjugation::approximateCurve(const Curve &curve, int degreeA
 void AlgBasedCurveConjugation::addNodalPoints(Curve &curve) const
 {
     int degree = curve.getDegree();
-    int numRealRangeKnots = static_cast<int>(curve.getControlPoints().size()) - degree + 1; // Кол-во узлов реального диапазона узл. вектора
-    std::vector<double> nodalVector = curve.getNodalVector();
     std::vector<QPointF> controlPoints = curve.getControlPoints();
-    int numNewNodes = (degree - 1) * (numRealRangeKnots - 2); // "-1" не берём уже имеющиеся узлы; "-2" не берём граничные узлы равные 0 и 1
-    std::vector<double> newNodes;
+    int controlPointsSize = static_cast<int>(controlPoints.size());
+    int numRealRangeKnots = controlPointsSize - degree + 1; // Кол-во узлов реального диапазона узл. вектора
+    std::vector<double> nodalVector = curve.getNodalVector();
     int numKnots = static_cast<int>(nodalVector.size());
+
+    int numNewNodes = (degree - 1) * (numRealRangeKnots - 2);   // "-1" не берём уже имеющиеся узлы; "-2" не берём граничные узлы равные 0 и 1
+    std::vector<double> newNodesNodalVector;    // Новые узлы для нового узлового вектора
+
 
     // Начало и конец реального диапазона узл. вектора
     int realRangeStart = degree;
     int realRangeEnd = numKnots - degree - 1;
-
     int numNotBoundaryNodals = 0; // Количество не граничных узлов (не равных 0 и 1)
 
     for (int i = realRangeStart; i < realRangeEnd; ++i)
@@ -84,19 +90,19 @@ void AlgBasedCurveConjugation::addNodalPoints(Curve &curve) const
             if (nodalVector[i] == 0 || nodalVector[i] == 1) // Пропускаем границы реального диапазона
                 break;
 
-            newNodes.push_back(nodalVector[i]);;
+            newNodesNodalVector.push_back(nodalVector[i]);;
             ++counter;
         }
     }
 
     int numOldControlPoints = static_cast<int>(curve.getControlPoints().size());    // Коли-во контрольных точек до вставки
-    int maxIndexNewNodes = static_cast<int>(newNodes.size() - 1);         // Максимальный индекс вектора newNodes
+    int maxIndexNewNodes = static_cast<int>(newNodesNodalVector.size() - 1);        // Максимальный индекс вектора newNodesNodalVector
 
-    std::vector<QPointF> newControlPoints(numOldControlPoints + newNodes.size()); // Новые контрольные точки
-    std::vector<double> newNodalVector(nodalVector.size() + newNodes.size());  // Новый узловой вектор
+    std::vector<QPointF> newControlPoints(numOldControlPoints + newNodesNodalVector.size());    // Новые контрольные точки
+    std::vector<double> newNodalVector(nodalVector.size() + newNodesNodalVector.size());        // Новый узловой вектор
 
-    double a = CalcCurve::findSpanForParameter(newNodes[0], nodalVector, degree);
-    double b = CalcCurve::findSpanForParameter(newNodes[maxIndexNewNodes], nodalVector, degree) + 1;
+    double a = CalcCurve::findSpanForParameter(newNodesNodalVector[0], nodalVector, degree);
+    double b = CalcCurve::findSpanForParameter(newNodesNodalVector[maxIndexNewNodes], nodalVector, degree) + 1;
 
     for (int i = 0; i < a - degree + 1; ++i)
         newControlPoints[i] = controlPoints[i];
@@ -115,7 +121,7 @@ void AlgBasedCurveConjugation::addNodalPoints(Curve &curve) const
 
     for (int i = maxIndexNewNodes; i > -1; --i)
     {
-        while ((newNodes[i] <= nodalVector[ind]) && (ind > a))
+        while ((newNodesNodalVector[i] <= nodalVector[ind]) && (ind > a))
         {
             newControlPoints[k - degree - 1] = controlPoints[ind - degree - 1];
             newNodalVector[k] = nodalVector[ind];
@@ -127,7 +133,7 @@ void AlgBasedCurveConjugation::addNodalPoints(Curve &curve) const
         for (int j = 1; j < degree + 1; ++j)
         {
             int temp = k - degree + j;
-            double alpha = newNodalVector[k + j] - newNodes[i];
+            double alpha = newNodalVector[k + j] - newNodesNodalVector[i];
 
             if (alpha == 0)
                 newControlPoints[temp - 1] = newControlPoints[temp];
@@ -139,7 +145,7 @@ void AlgBasedCurveConjugation::addNodalPoints(Curve &curve) const
             }
         }
 
-        newNodalVector[k] = newNodes[i];
+        newNodalVector[k] = newNodesNodalVector[i];
         --k;
     }
 
@@ -358,20 +364,17 @@ QPointF AlgBasedCurveConjugation::calcDerivRightBezierCurveForMerger(const std::
         return calcDerivRightBezierCurveForMerger(points, currentIndex, startIndex + 1) - calcDerivRightBezierCurveForMerger(points, currentIndex - 1, startIndex);
 }
 
-Curve AlgBasedCurveConjugation::addMultipleKnot(Curve &curve) const
+Curve AlgBasedCurveConjugation::redefineControlPointsNodalVectorCurve(Curve &curve) const
 {
-    int degree = curve.getDegree();
-    std::vector<double> newNodes(degree, 0.5); // Новый вектор узловых точек, который будет добавлен в текущий
-    std::vector<QPointF> newControlPoints(curve.getControlPoints().size() + degree);
+    std::vector<double> oldNodalVector = curve.getNodalVector();
+    std::vector<QPointF> oldControlPoints = curve.getControlPoints();
+
+
+    int newDegreeCurve = curve.getDegree();
+    std::vector<double> newNodes(newDegreeCurve, 0.5); // Новый вектор узловых точек, который будет добавлен в текущий
+    std::vector<QPointF> newControlPoints(curve.getControlPoints().size() + newDegreeCurve);
     std::vector<double> newNodalVector(curve.getNodalVector().size() + newNodes.size());
 
-    redefineControlPointsNodalVectorCurve(degree, curve.getNodalVector(), curve.getControlPoints(), newNodes, newNodalVector, newControlPoints);
-    return redefineCurve(newControlPoints, newNodalVector, degree, static_cast<int>(curve.getCurvePoints().size()));
-}
-
-void AlgBasedCurveConjugation::redefineControlPointsNodalVectorCurve(int newDegreeCurve, const std::vector<double>& oldNodalVector, const std::vector<QPointF> &oldControlPoints, std::vector<double> newNodes,
-                                                      std::vector<double>& newNodalVector, std::vector<QPointF> &newControlPoints) const
-{
     int numOldControlPoints = static_cast<int>(oldControlPoints.size());    // Коли-во контрольных точек до вставки
     int maxIndexNewNodes = static_cast<int>(newNodes.size()) - 1;
 
@@ -422,4 +425,6 @@ void AlgBasedCurveConjugation::redefineControlPointsNodalVectorCurve(int newDegr
         newNodalVector[k] = newNodes[i];
         --k;
     }
+
+    return redefineCurve(newControlPoints, newNodalVector, newDegreeCurve, static_cast<int>(curve.getCurvePoints().size()));
 }

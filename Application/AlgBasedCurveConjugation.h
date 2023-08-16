@@ -25,11 +25,7 @@ private:
     QPointF calcNegativeDerivLeftBezierCurveForMerger(const std::vector<QPointF>& points, int currentIndex, int startIndex) const; // Возвращает отрицательную производную для левой кривой
     QPointF calcDerivRightBezierCurveForMerger(const std::vector<QPointF>& points, int currentIndex, int startIndex) const;
 
-    // Добавляет в кривую кратный узел, для дальнейшего разбиения её на кривые Безье
-    Curve addMultipleKnot(Curve &curve) const;
-
     // Переопределяет контрольные точки и узловой вектор кривой по новым узлам, которые необходимо вставить
-    void redefineControlPointsNodalVectorCurve(int newDegreeCurve, const std::vector<double>& oldNodalVector, const std::vector<QPointF>& oldControlPoints, std::vector<double> newNodes,
-                                                      std::vector<double>& newNodalVector, std::vector<QPointF>& newControlPoints) const;
+    Curve redefineControlPointsNodalVectorCurve(Curve &curve) const;
 };
 
