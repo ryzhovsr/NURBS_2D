@@ -1,6 +1,7 @@
 #pragma once
 
-#include "CurvePoint.h"
+#include "Curve.h"
+#include <vector>
 
 class MathUtils
 {
@@ -19,6 +20,9 @@ public:
 
     // Рассчитывает сочетания без повторений из n по k
     static int calcCombWithoutRepetition(int n, int k);
+
+    // Возвращает пару векторов с точками кривой, отдалённых от исходной кривой на длину (len) сверху и снизу
+    static std::pair<std::vector<CurvePoint>, std::vector<CurvePoint>> moveCurve(const Curve &curve, double length);
 
 private:
     MathUtils();

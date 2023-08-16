@@ -14,6 +14,7 @@ SOURCES += \
     CalcCurve.cpp \
     Curve.cpp \
     EigenMatrixOperations.cpp \
+    FindDistanceBetweenCurves.cpp \
     Graph2D.cpp \
     IApproxAlgs.cpp \
     IMatrixOperations.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     CalcCurve.h \
     Curve.h \
     EigenMatrixOperations.h \
+    FindDistanceBetweenCurves.h \
     Graph2D.h \
     CurvePoint.h \
     IApproxAlgs.h \

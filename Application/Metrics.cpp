@@ -1,6 +1,7 @@
 #include "Metrics.h"
 #include "MathUtils.h"
 #include <QDebug>
+#include "FindDistanceBetweenCurves.h"
 
 double Metrics::calcCurveCurvature(const std::vector<CurvePoint> &curvePoints)
 {
@@ -26,10 +27,10 @@ double Metrics::calcCurveCurvature(const Curve &curve)
 
 double Metrics::calcHausdorffMetric(const Curve &Curve1, const Curve &Curve2)
 {
-    //double distanceFromFirstCurve = temp.findMaxLenBetweenCurves(Curve1, Curve2);    // Расстояние от первой кривой ко второй кривой
-    //double distanceFromSecondCurve = temp.findMaxLenBetweenCurves(Curve2, Curve1);   // Расстояние от второй кривой к первой кривой
+    double distanceFromFirstCurve = FindDistanceBetweenCurves::findMaxLenBetweenCurves(Curve1, Curve2);    // Расстояние от первой кривой ко второй кривой
+    double distanceFromSecondCurve = FindDistanceBetweenCurves::findMaxLenBetweenCurves(Curve2, Curve1);   // Расстояние от второй кривой к первой кривой
 
-    return 1; //distanceFromFirstCurve > distanceFromSecondCurve ? distanceFromFirstCurve : distanceFromSecondCurve;
+    return distanceFromFirstCurve > distanceFromSecondCurve ? distanceFromFirstCurve : distanceFromSecondCurve;
 }
 
 double Metrics::calcQuadraticDifference(const Curve &Curve1, const Curve &Curve2)
@@ -48,4 +49,15 @@ double Metrics::calcQuadraticDifference(const Curve &Curve1, const Curve &Curve2
     }
 
     return sqrt(x * x + y * y);
+}
+
+std::pair<CurvePoint, CurvePoint> Metrics::calcPointsHausdorffMetric(const Curve &Curve1, const Curve &Curve2)
+{
+    std::pair<CurvePoint, CurvePoint> farthestPoints_1 = FindDistanceBetweenCurves::findFarthestPointsNURBS(Curve1, Curve2);
+    std::pair<CurvePoint, CurvePoint> farthestPoints_2 = FindDistanceBetweenCurves::findFarthestPointsNURBS(Curve2, Curve1);
+
+    double dist_1 = MathUtils::calcVectorLenght(farthestPoints_1.first.point, farthestPoints_1.second.point);
+    double dist_2 = MathUtils::calcVectorLenght(farthestPoints_2.first.point, farthestPoints_2.second.point);
+
+    return dist_1 > dist_2 ? farthestPoints_1 : farthestPoints_2;
 }
