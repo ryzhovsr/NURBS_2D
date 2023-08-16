@@ -21,6 +21,7 @@ SOURCES += \
     MathUtils.cpp \
     Metrics.cpp \
     NativeAlg.cpp \
+    ResourceApproxAlgs.cpp \
     main.cpp \
     mainwindow.cpp \
     qcustomplot.cpp
@@ -39,6 +40,7 @@ HEADERS += \
     MathUtils.h \
     Metrics.h \
     NativeAlg.h \
+    ResourceApproxAlgs.h \
     mainwindow.h \
     qcustomplot.h
 

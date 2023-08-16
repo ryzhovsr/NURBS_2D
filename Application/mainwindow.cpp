@@ -5,6 +5,7 @@
 #include "NativeAlg.h"
 #include "AlgBasedIntegralNorm.h"
 #include "AlgBasedCurveConjugation.h"
+#include "ResourceApproxAlgs.h"
 
 /*
 MainWindow::MainWindow(QWidget *parent)
@@ -95,7 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(originalCurve, "Исходная кривая (24 степень)", QColor(30, 144, 255), Qt::PenStyle::SolidLine, 4);
     canvas.drawDefiningPolygon(originalCurve.getControlPoints(), "Определяющий многоугольник");
 
-    AlgBasedCurveConjugation approxAlg;
+    ResourceApproxAlgs approxAlg(new AlgBasedCurveConjugation);
+
     Curve curve1 = approxAlg.approximateCurve(originalCurve, approximateDegree);
 
     canvas.drawCurve(curve1, "Кривая 2", QColor(202, 150, 230));
