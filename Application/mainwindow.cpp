@@ -4,7 +4,9 @@
 #include "Metrics.h"
 #include "NativeAlg.h"
 #include "AlgBasedIntegralNorm.h"
+#include "AlgBasedCurveConjugation.h"
 
+/*
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(curve1, "Кривая 1", QColor(20, 150, 30));
     canvas.drawDefiningPolygon(curve1.getControlPoints(), "Определяющий многоугольник");
 
-    AlgBasedIntegralNorm approxAlg;
+    AlgBasedCurveConjugation approxAlg;
     Curve curve2 = approxAlg.approximateCurve(curve1, DEGREE - 1);
 
     canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));
@@ -37,15 +39,15 @@ MainWindow::MainWindow(QWidget *parent)
 
     qDebug() << Metrics::calcHausdorffMetric(curve1, curve2);
 }
+*/
 
-/*
 // Пример построения с крылом 1
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    int approximateDegree = 22;
+    int approximateDegree = 20;
 
     const std::vector<QPointF> CONTROL_POINTS    // Крыло
     {
@@ -93,8 +95,16 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(originalCurve, "Исходная кривая (24 степень)", QColor(30, 144, 255), Qt::PenStyle::SolidLine, 4);
     canvas.drawDefiningPolygon(originalCurve.getControlPoints(), "Определяющий многоугольник");
 
-    //////Первый способ - разбили на безье, понизили, соединили, добавили узлы, и по новой
+    AlgBasedCurveConjugation approxAlg;
+    Curve curve1 = approxAlg.approximateCurve(originalCurve, approximateDegree);
 
+    canvas.drawCurve(curve1, "Кривая 2", QColor(202, 150, 230));
+    canvas.drawDefiningPolygon(curve1.getControlPoints(), "", QColor(0, 0, 0), Qt::DashLine);
+
+    qDebug() << Metrics::calcHausdorffMetric(curve1, originalCurve);
+
+    //Первый способ - разбили на безье, понизили, соединили, добавили узлы, и по новой
+    /*
     Curve newCurve_1(CONTROL_POINTS, WEIGHTS, approximateDegree, CURVE_NUM_POINTS);
     newCurve_1.calcCurve();
 
@@ -109,8 +119,9 @@ MainWindow::MainWindow(QWidget *parent)
                 "\nНовая квадр. разность =" << diff1 << '\n';
 
     canvas.drawCurve(newCurve_1, "Новая кривая, аппр. интегральным способом", QColor(100, 0, 193), Qt::PenStyle::DashLine);
+    */
 }
-*/
+
 MainWindow::~MainWindow()
 {
     delete ui;
