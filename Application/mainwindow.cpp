@@ -42,6 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 */
 
+/*
 // Пример построения с крылом 1
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -106,22 +107,49 @@ MainWindow::MainWindow(QWidget *parent)
     qDebug() << Metrics::calcHausdorffMetric(curve1, originalCurve);
 
     //Первый способ - разбили на безье, понизили, соединили, добавили узлы, и по новой
-    /*
-    Curve newCurve_1(CONTROL_POINTS, WEIGHTS, approximateDegree, CURVE_NUM_POINTS);
-    newCurve_1.calcCurve();
 
-    const double DISTANSE_1 = Metrics::calcHausdorffMetric(originalCurve, newCurve_1);
-    const double CURVATURE_1 = Metrics::calcCurveCurvature(newCurve_1.getCurvePoints());
-    double diff1 = Metrics::calcQuadraticDifference(originalCurve, newCurve_1);
+    //Curve newCurve_1(CONTROL_POINTS, WEIGHTS, approximateDegree, CURVE_NUM_POINTS);
+    //newCurve_1.calcCurve();
 
-    qDebug() << "Сложный алгоритм:\n"
-                "Новая степень =" << newCurve_1.getDegree() <<
-                "\nРасстояние между исходной кривой =" << DISTANSE_1 <<
-                "\nНовая кривизна =" << CURVATURE_1 <<
-                "\nНовая квадр. разность =" << diff1 << '\n';
+    //const double DISTANSE_1 = Metrics::calcHausdorffMetric(originalCurve, newCurve_1);
+    //const double CURVATURE_1 = Metrics::calcCurveCurvature(newCurve_1.getCurvePoints());
+    //double diff1 = Metrics::calcQuadraticDifference(originalCurve, newCurve_1);
+
+    //qDebug() << "Сложный алгоритм:\n"
+    //            "Новая степень =" << newCurve_1.getDegree() <<
+    //            "\nРасстояние между исходной кривой =" << DISTANSE_1 <<
+    //            "\nНовая кривизна =" << CURVATURE_1 <<
+    //            "\nНовая квадр. разность =" << diff1 << '\n';
 
     canvas.drawCurve(newCurve_1, "Новая кривая, аппр. интегральным способом", QColor(100, 0, 193), Qt::PenStyle::DashLine);
-    */
+}
+*/
+
+// Пример с расчётом всех производных
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+
+    const std::vector<QPointF> CONTROL_POINTS
+    {
+        {1, 2},
+        {2, 2},
+        {2.5, 4},
+        {4.5, 4},
+        {5, 1.8},
+        {3,1}
+    };
+
+    const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
+    const int CURVE_NUM_POINTS = 100;   // Кол-во точек, из которых будет состоять кривая
+    const int DEGREE = 3;   // Степень кривой
+
+    Curve curve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
+
+    Graph2D canvas(ui->canvas);
+    canvas.drawCurve(curve, "NURBS (3 степень)", QColor(30, 144, 255), Qt::PenStyle::SolidLine); // Рисуем кривую
+    canvas.drawDefiningPolygon(CONTROL_POINTS, "Определяющий многоугольник"); // Рисуем определяющий многоугольник кривой
 }
 
 MainWindow::~MainWindow()
