@@ -59,8 +59,8 @@ std::vector<std::vector<double>> AlgBasedIntegralNorm::calcNewControlsPointsInte
 
         for (auto &point: c_N)
         {
-            point[0] += pointOriginalCurve.point.x() * basisFunctions[0][count] * DELTA;
-            point[1] += pointOriginalCurve.point.y() * basisFunctions[0][count] * DELTA;
+            point[0] += pointOriginalCurve.x * basisFunctions[0][count] * DELTA;
+            point[1] += pointOriginalCurve.y * basisFunctions[0][count] * DELTA;
             ++count;
         }
     }

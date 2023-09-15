@@ -22,10 +22,5 @@ public:
     // Вычисляет производные базисных функций
     static void calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, std::vector<std::vector<double>> &tempStorage, int degree);
 
-    // Вычисляет точку кривой
-    static void calcPointCurve(const Curve &curve, const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0);
-
-    // Вычисляют первую и вторую производные в точке кривой
-    static void calcPointFirstDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
-    static void calcPointSecondDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2);
+    static void calcDerivCurve(CurvePoint &curvePoint, int span, const std::vector<QPointF>& controlPoints, const std::vector<double>& weights, const std::vector<std::vector<double>>& basisFuncsAndTheirDerivs, int degree);
 };

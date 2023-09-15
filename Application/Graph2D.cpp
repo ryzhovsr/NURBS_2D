@@ -52,7 +52,7 @@ void Graph2D::drawCurve(const std::vector<CurvePoint> &curvePoints, const QStrin
     shape->setName(name);
 
     for (const auto &curvePoint: curvePoints)
-        shape->addData(curvePoint.point.x(), curvePoint.point.y());
+        shape->addData(curvePoint.x, curvePoint.y);
 
     _canvas->replot();
 }
@@ -63,8 +63,11 @@ void Graph2D::drawTwoCurves(const std::pair<std::vector<CurvePoint>, std::vector
     drawCurve(twoCurves.second, "", Qt::PenStyle::DashLine);
 }
 
-void Graph2D::drawHodographFirstDeriv(const Curve &curve, const QString &name, const QColor &color, const Qt::PenStyle &penStyle, double width) const noexcept
+void Graph2D::drawHodographDeriv(const Curve &curve, int derivativeOrder, const QString &name, const QColor &color, const Qt::PenStyle &penStyle, double width) const noexcept
 {
+    if (derivativeOrder == 0) // Не выводим порядок нулево производной, т.к. это сама кривая
+        return;
+
     QCPCurve *shape = new QCPCurve(_canvas->xAxis, _canvas->yAxis);
     QPen pen;
     pen.setColor(QColor(color));
@@ -73,23 +76,7 @@ void Graph2D::drawHodographFirstDeriv(const Curve &curve, const QString &name, c
     shape->setPen(pen);
 
     for (const auto &curvePoint: curve.getCurvePoints())
-        shape->addData(curvePoint.firstDeriv.x() + curvePoint.point.x(), curvePoint.firstDeriv.y() + curvePoint.point.y()); // С приращением координат кривой
-
-    shape->setName(name);
-    _canvas->replot();
-}
-
-void Graph2D::drawHodograpSecondDeriv(const Curve &curve, const QString &name, const QColor &color, const Qt::PenStyle &penStyle, double width) const noexcept
-{
-    QCPCurve *shape = new QCPCurve(_canvas->xAxis, _canvas->yAxis);
-    QPen pen;
-    pen.setColor(QColor(color));
-    pen.setStyle(penStyle);
-    pen.setWidthF(width);
-    shape->setPen(pen);
-
-    for (const auto &curvePoint: curve.getCurvePoints())
-        shape->addData(curvePoint.secondDeriv.x() + curvePoint.point.x(), curvePoint.secondDeriv.y() + curvePoint.point.y());  // С приращением координат кривой
+        shape->addData(curvePoint.derivs[derivativeOrder].x() + curvePoint.x, curvePoint.derivs[derivativeOrder].y() + curvePoint.y); // С приращением координат кривой
 
     shape->setName(name);
     _canvas->replot();
@@ -157,8 +144,8 @@ void Graph2D::drawTangentArrowToCurve(const CurvePoint &curvePoint) const noexce
 {
     QCPItemLine *shape = new QCPItemLine(_canvas);
     shape->setHead(QCPLineEnding::esFlatArrow);
-    shape->start->setCoords(curvePoint.point.x(), curvePoint.point.y());
-    shape->end->setCoords(curvePoint.firstDeriv.x() + curvePoint.point.x(), curvePoint.firstDeriv.y() + curvePoint.point.y());
+    shape->start->setCoords(curvePoint.x, curvePoint.y);
+    shape->end->setCoords(curvePoint.derivs[1].x() + curvePoint.x, curvePoint.derivs[1].y() + curvePoint.y);
     _canvas->replot();
 }
 
@@ -169,8 +156,8 @@ void Graph2D::drawTangentToCurve(const CurvePoint &curvePoint, const QColor &col
     pen.setColor(color);
     pen.setWidth(width);
     shape->setPen(pen);
-    shape->start->setCoords(curvePoint.point.x() - curvePoint.firstDeriv.x() / 10, curvePoint.point.y() - curvePoint.firstDeriv.y() / 10);
-    shape->end->setCoords(curvePoint.point.x() + curvePoint.firstDeriv.x() / 10, curvePoint.point.y() + curvePoint.firstDeriv.y() / 10);
+    shape->start->setCoords(curvePoint.x - curvePoint.derivs[1].x() / 10, curvePoint.y - curvePoint.derivs[1].y() / 10);
+    shape->end->setCoords(curvePoint.x + curvePoint.derivs[1].x() / 10, curvePoint.y + curvePoint.derivs[1].y() / 10);
     _canvas->replot();
 }
 

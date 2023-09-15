@@ -23,7 +23,12 @@ double MathUtils::calcVectorLenght(const QPointF &point1, const QPointF &point2)
 
 double MathUtils::calcVectorLenght(const CurvePoint &point1, const QPointF &point2)
 {
-    return calcVectorLenght(point1.point.x(), point1.point.y(), point2.x(), point2.y());
+    return calcVectorLenght(point1.x, point1.y, point2.x(), point2.y());
+}
+
+double MathUtils::calcVectorLenght(const QPointF &point1, double x2, double y2)
+{
+    return calcVectorLenght(point1.x(), point1.y(), x2, y2);
 }
 
 double MathUtils::calcAngleBetweenVectors(const QPointF &vecStart1, const QPointF &vecEnd1, const QPointF &vecStart2, const QPointF &vecEnd2)
@@ -53,30 +58,32 @@ std::pair<std::vector<CurvePoint>, std::vector<CurvePoint>> MathUtils::moveCurve
     for (size_t i = 0; i < curve.getCurvePoints().size(); ++i)
     {
         CurvePoint curvePoint = curve.getCurvePoints()[i];
-        double rotatedX = curvePoint.firstDeriv.x() * cos(M_PI / 2) - curvePoint.firstDeriv.y() * sin(M_PI / 2);
-        double rotatedY = curvePoint.firstDeriv.x() * sin(M_PI / 2) + curvePoint.firstDeriv.y() * cos(M_PI / 2);
-        QPointF rotatedPoint =  QPointF(rotatedX + curvePoint.point.x(), rotatedY + curvePoint.point.y());  // Точка кривой со повотором на 90 градусов от начала коор-т
+        double rotatedX = curvePoint.derivs[1].x() * cos(M_PI / 2) - curvePoint.derivs[1].y() * sin(M_PI / 2);
+        double rotatedY = curvePoint.derivs[1].x()  * sin(M_PI / 2) + curvePoint.derivs[1].y() * cos(M_PI / 2);
+        QPointF rotatedPoint =  QPointF(rotatedX + curvePoint.x, rotatedY + curvePoint.y);  // Точка кривой со повотором на 90 градусов от начала коор-т
 
-        double x = rotatedPoint.x() - curvePoint.point.x();
-        double y = rotatedPoint.y() - curvePoint.point.y();
+        double x = rotatedPoint.x() - curvePoint.x;
+        double y = rotatedPoint.y() - curvePoint.y;
         double vecLen = MathUtils::calcRadiusVectorLength(x, y);
         x *= length / vecLen;
         y *= length / vecLen;
 
-        movePointsNURBS[i].point = QPointF(x + curvePoint.point.x(), y + curvePoint.point.y());
+        movePointsNURBS[i].x = x + curvePoint.x;
+        movePointsNURBS[i].y = y + curvePoint.y;
 
-        rotatedX = curvePoint.firstDeriv.x() * cos(-M_PI / 2) - curvePoint.firstDeriv.y() * sin(-M_PI / 2); // Точка кривой со сдвигом на -90 градусов от начала коор-т
-        rotatedY = curvePoint.firstDeriv.x() * sin(-M_PI / 2) + curvePoint.firstDeriv.y() * cos(-M_PI / 2);
+        rotatedX = curvePoint.derivs[1].x() * cos(-M_PI / 2) - curvePoint.derivs[1].y() * sin(-M_PI / 2); // Точка кривой со сдвигом на -90 градусов от начала коор-т
+        rotatedY = curvePoint.derivs[1].x() * sin(-M_PI / 2) + curvePoint.derivs[1].y() * cos(-M_PI / 2);
 
-        QPointF reverseRotatedPoints = QPointF(rotatedX + curvePoint.point.x(), rotatedY + curvePoint.point.y());
+        QPointF reverseRotatedPoints = QPointF(rotatedX + curvePoint.x, rotatedY + curvePoint.y);
 
-        x = reverseRotatedPoints.x() - curvePoint.point.x();
-        y = reverseRotatedPoints.y() - curvePoint.point.y();
+        x = reverseRotatedPoints.x() - curvePoint.x;
+        y = reverseRotatedPoints.y() - curvePoint.y;
         vecLen = MathUtils::calcRadiusVectorLength(x, y);
         x *= length / vecLen;
         y *= length / vecLen;
 
-        reverseMovePointsNURBS[i].point = QPointF(x + curvePoint.point.x(), y + curvePoint.point.y());
+        reverseMovePointsNURBS[i].x = x + curvePoint.x;
+        reverseMovePointsNURBS[i].y = y + curvePoint.y;
     }
 
     return std::pair<std::vector<CurvePoint>, std::vector<CurvePoint>> (movePointsNURBS, reverseMovePointsNURBS);

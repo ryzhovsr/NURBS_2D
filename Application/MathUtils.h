@@ -14,6 +14,7 @@ public:
     static double calcVectorLenght(double x1, double y1, double x2, double y2);
     static double calcVectorLenght(const QPointF &point1, const QPointF &point2);
     static double calcVectorLenght(const CurvePoint &point1, const QPointF &point2);
+    static double calcVectorLenght(const QPointF &point1, double x2, double y2);
 
     // Возвращает угол между двумя векторами
     static double calcAngleBetweenVectors(const QPointF &vecStart1, const QPointF &vecEnd1, const QPointF &vecStart2, const QPointF &vecEnd2);

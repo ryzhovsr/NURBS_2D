@@ -42,7 +42,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 */
 
-/*
+
 // Пример построения с крылом 1
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -82,11 +82,10 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
-    const int CURVE_NUM_POINTS = 100;   // Кол-во точек, из которых будет состоять кривая
+    const int CURVE_NUM_POINTS = 10000;   // Кол-во точек, из которых будет состоять кривая
     const int DEGREE = 24;   // Степень кривой
 
     Curve originalCurve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
-    originalCurve.calcCurve();
     const double ORIGINAL_CURVE_CURVATURE = Metrics::calcCurveCurvature(originalCurve.getCurvePoints());
 
     qDebug() << "Исходная кривая:\n"
@@ -97,6 +96,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(originalCurve, "Исходная кривая (24 степень)", QColor(30, 144, 255), Qt::PenStyle::SolidLine, 4);
     canvas.drawDefiningPolygon(originalCurve.getControlPoints(), "Определяющий многоугольник");
 
+    /*
     ResourceApproxAlgs approxAlg(new AlgBasedCurveConjugation);
 
     Curve curve1 = approxAlg.approximateCurve(originalCurve, approximateDegree);
@@ -121,10 +121,12 @@ MainWindow::MainWindow(QWidget *parent)
     //            "\nНовая кривизна =" << CURVATURE_1 <<
     //            "\nНовая квадр. разность =" << diff1 << '\n';
 
-    canvas.drawCurve(newCurve_1, "Новая кривая, аппр. интегральным способом", QColor(100, 0, 193), Qt::PenStyle::DashLine);
-}
+    //canvas.drawCurve(newCurve_1, "Новая кривая, аппр. интегральным способом", QColor(100, 0, 193), Qt::PenStyle::DashLine);\
 */
+}
 
+
+/*)
 // Пример с расчётом всех производных
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -151,6 +153,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(curve, "NURBS (3 степень)", QColor(30, 144, 255), Qt::PenStyle::SolidLine); // Рисуем кривую
     canvas.drawDefiningPolygon(CONTROL_POINTS, "Определяющий многоугольник"); // Рисуем определяющий многоугольник кривой
 }
+*/
 
 MainWindow::~MainWindow()
 {

@@ -1,5 +1,6 @@
 #include "CalcCurve.h"
 #include <QDebug>
+#include "MathUtils.h"
 
 void CalcCurve::calcCurvePointAndDerivs(const Curve &curve, CurvePoint &curvePoint, double parameter)
 {
@@ -8,21 +9,7 @@ void CalcCurve::calcCurvePointAndDerivs(const Curve &curve, CurvePoint &curvePoi
     curvePoint.span = findSpanForParameter(parameter, curve.getNodalVector(), degree); // Вычисляем узловой промежуток (спан) для заданного параметра
 
     std::vector<std::vector<double>> basisFuncsAndTheirDerivs = calcBasisFuncsAndTheirDerivs(curve.getNodalVector(), parameter, curvePoint.span, degree); // Вычисляем базисные функции и их производные
-
-    double denominator = 0;
-    QPointF n0;
-
-    calcPointCurve(curve, basisFuncsAndTheirDerivs, curvePoint, denominator, n0); // Рассчитываем точку кривой
-
-    QPointF n1;
-    double n2 = 0;
-
-    calcPointFirstDeriv(curve, basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 1-ую производную
-
-    if (curve.getDegree() == 1) // Если степень кривой = 1, то выходим из функции
-        return;
-
-    calcPointSecondDeriv(curve, basisFuncsAndTheirDerivs, curvePoint, denominator, n0, n1, n2); // Рассчитываем 2-ую производную
+    calcDerivCurve(curvePoint, curvePoint.span, curve.getControlPoints(), curve.getWeights(), basisFuncsAndTheirDerivs, degree);
 }
 
 int CalcCurve::findSpanForParameter(double parameter, const std::vector<double> &nodalVector, int degree)
@@ -169,53 +156,32 @@ void CalcCurve::calcDerivsBasisFuncs(std::vector<std::vector<double>> &basisFunc
     }
 }
 
-void CalcCurve::calcPointCurve(const Curve &curve, const std::vector<std::vector<double>> &basisFunctionsAndTheirDerivs, CurvePoint &curvePoint, double &denominator, QPointF &n0)
+void CalcCurve::calcDerivCurve(CurvePoint &curvePoint, int span, const std::vector<QPointF>& controlPoints, const std::vector<double>& weights, const std::vector<std::vector<double>>& basisFuncsAndTheirDerivs, int degree)
 {
-    int degree = curve.getDegree();
-    std::vector<double> weights = curve.getWeights();
-    std::vector<QPointF> controlPoints = curve.getControlPoints();
+    std::vector<QPointF> numerator(degree+1);
+    std::vector<double> denomerator(degree+1);
+    curvePoint.derivs.resize(degree + 1);
 
-    for (int i = 0; i < degree + 1; ++i)
+    for (int i = 0; i < degree+1; ++i)
     {
-        n0 += basisFunctionsAndTheirDerivs[0][i] * weights[curvePoint.span - degree + i] * controlPoints[curvePoint.span - degree + i];
-        denominator += basisFunctionsAndTheirDerivs[0][i] * weights[curvePoint.span - degree + i];
+        for (int j = 0; j < degree+1; ++j)
+        {
+            numerator[i] += basisFuncsAndTheirDerivs[i][j]*controlPoints[span - degree + j]* weights[span - degree + j];
+            denomerator[i] += basisFuncsAndTheirDerivs[i][j]* weights[span - degree + j];
+        }
     }
 
-    curvePoint.point = n0 / denominator;
-}
+    curvePoint.derivs[0] = numerator[0] / denomerator[0];
+    curvePoint.x = curvePoint.derivs[0].x();
+    curvePoint.y = curvePoint.derivs[0].y();
 
-void CalcCurve::calcPointFirstDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
-{
-    int degree = curve.getDegree();
-    std::vector<double> weights = curve.getWeights();
-    std::vector<QPointF> controlPoints = curve.getControlPoints();
-
-    for (int i = 0; i < degree + 1; ++i)
+    for (int k = 1; k < degree+1; ++k)
     {
-        n1 += basisFuncsAndTheirDerivs[1][i] * weights[curvePoint.span - degree + i] * controlPoints[curvePoint.span - degree + i] ;
-        n2 += basisFuncsAndTheirDerivs[1][i] * weights[curvePoint.span - degree + i];
+        QPointF sum(0, 0);
+
+        for (int i = 1; i < k+1; ++i)
+            sum += MathUtils::calcCombWithoutRepetition(k,i) * denomerator[i] * curvePoint.derivs[k-i];
+
+        curvePoint.derivs[k] = (numerator[k] - sum) / denomerator[0];
     }
-
-    curvePoint.firstDeriv = n1 / denominator - (n0 * n2) / (denominator * denominator);
-}
-
-void CalcCurve::calcPointSecondDeriv(const Curve &curve, const std::vector<std::vector<double>> &basisFuncsAndTheirDerivs, CurvePoint &curvePoint, double denominator, QPointF &n0, QPointF &n1, double n2)
-{
-    int degree = curve.getDegree();
-    std::vector<double> weights = curve.getWeights();
-    std::vector<QPointF> controlPoints = curve.getControlPoints();
-
-    QPointF n3;
-    double n4 = 0;
-
-    for (int i = 0; i < degree + 1; ++i)
-    {
-        n3 += weights[curvePoint.span - degree + i] * basisFuncsAndTheirDerivs[2][i] * controlPoints[curvePoint.span - degree + i];
-        n4 += weights[curvePoint.span - degree + i] * basisFuncsAndTheirDerivs[2][i];
-    }
-
-    QPointF s1 = n3 / denominator - (n1 * n2) / (denominator * denominator);
-    QPointF s2 = (n1 * n2 + n0 * n4) / (denominator * denominator) - (n1 * n2 * 2 * n2) / (pow(denominator, 4));
-
-    curvePoint.secondDeriv = s1 - s2;
 }

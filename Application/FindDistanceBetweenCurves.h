@@ -6,7 +6,7 @@ class FindDistanceBetweenCurves
 {
 public:
     // Возвращает максимальное расстояние между кривыми
-    static double findMaxLenBetweenCurves(const Curve &curve1, const Curve &Curve2);
+    static double findMaxLenBetweenCurves(const Curve &curve1, const Curve &curve2);
 
     // Возвращает самые дальние точки двух кривых (для построения расстояния между ними)
     static std::pair<CurvePoint, CurvePoint> findFarthestPointsNURBS(const Curve &curve1, const Curve &curve2);

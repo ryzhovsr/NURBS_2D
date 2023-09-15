@@ -3,7 +3,7 @@
 #include "CalcCurve.h"
 
 Curve::Curve(const std::vector<QPointF> &controlPoints, const std::vector<double> &weights, int degree, int curveNumPoints) noexcept
-    : _controlPoints {controlPoints}, _weights { weights }, _degree { degree }, _numRealRangePoints { curveNumPoints }
+    : _controlPoints {controlPoints}, _weights { weights }, _numRealRangePoints { curveNumPoints }, _degree { degree }
 {
     _curvePoints.resize(_numRealRangePoints); // Устанавливаем количество точек, из которых будет состоять кривая
 

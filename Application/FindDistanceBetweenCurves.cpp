@@ -2,16 +2,18 @@
 #include "MathUtils.h"
 #include "CalcCurve.h"
 
-double FindDistanceBetweenCurves::findMaxLenBetweenCurves(const Curve &curve1, const Curve &Curve2)
+double FindDistanceBetweenCurves::findMaxLenBetweenCurves(const Curve &curve1, const Curve &curve2)
 {
     double maxLength = 0, minCosine = 1;
 
-    for (size_t i = 0; i < Curve2.getCurvePoints().size(); ++i) // Находим наибольшее расстояние между кривыми
+    for (size_t i = 0; i < curve2.getCurvePoints().size(); ++i) // Находим наибольшее расстояние между кривыми
     {
         // Находим ближайшую точку исходной кривой к точке аппроксимирующей кривой
-        CurvePoint nearestPoint = findPointNURBS(curve1, Curve2.getCurvePoints()[i].point, false);
-        double tempLength = MathUtils::calcVectorLenght(nearestPoint, Curve2.getCurvePoints()[i].point);
-        double tempCosine = cosBetweenVectors(nearestPoint, Curve2.getCurvePoints()[i].point);
+        QPointF startingPoint = QPointF(curve2.getCurvePoints()[i].x, curve2.getCurvePoints()[i].y);
+
+        CurvePoint nearestPoint = findPointNURBS(curve1, startingPoint, false);
+        double tempLength = MathUtils::calcVectorLenght(nearestPoint, startingPoint);
+        double tempCosine = cosBetweenVectors(nearestPoint, startingPoint);
 
         const double RIGHT_ANGLE = 0.1;    // Допустимое значение прямого угла
 
@@ -41,9 +43,11 @@ std::pair<CurvePoint, CurvePoint> FindDistanceBetweenCurves::findFarthestPointsN
 
     for (size_t i = 0; i < curve2.getCurvePoints().size(); ++i)
     {
-        CurvePoint farthestPoint = findPointNURBS(curve1, curve2.getCurvePoints()[i].point, true);
-        double tempLength = MathUtils::calcVectorLenght(farthestPoint, curve2.getCurvePoints()[i].point);
-        double cos = cosBetweenVectors(farthestPoint, curve2.getCurvePoints()[i].point);
+        QPointF startingPoint = QPointF(curve2.getCurvePoints()[i].x, curve2.getCurvePoints()[i].y);
+
+        CurvePoint farthestPoint = findPointNURBS(curve1, startingPoint, true);
+        double tempLength = MathUtils::calcVectorLenght(farthestPoint, startingPoint);
+        double cos = cosBetweenVectors(farthestPoint, startingPoint);
 
         if (0.1 > cos && maxLength < tempLength)
         { // Если угол вектора расстояния до кривой ~90 градусов и его длина больше прошлой длины
@@ -58,8 +62,8 @@ std::pair<CurvePoint, CurvePoint> FindDistanceBetweenCurves::findFarthestPointsN
 
 double FindDistanceBetweenCurves::cosBetweenVectors(const CurvePoint& pointNURBS, const QPointF& point)
 {
-    QPointF vec1(pointNURBS.point.x() - point.x(), pointNURBS.point.y() - point.y());
-    QPointF vec2(pointNURBS.firstDeriv.x(), pointNURBS.firstDeriv.y());
+    QPointF vec1(pointNURBS.x - point.x(), pointNURBS.y - point.y());
+    QPointF vec2(pointNURBS.derivs[1].x(), pointNURBS.derivs[1].y());
     double numerator = vec1.x() * vec2.x() + vec1.y() * vec2.y();
     double vecLen1 = sqrt(pow(vec1.x(), 2) + pow(vec1.y(), 2));
     double vecLen2 = sqrt(pow(vec2.x(), 2) + pow(vec2.y(), 2));
@@ -96,11 +100,11 @@ CurvePoint FindDistanceBetweenCurves::findPointNURBS(const Curve &curve, const Q
 
         while (cosines[i] > RIGHT_ANGLE)     // Пока косинус не будет меньше допуст. знач. (~90 градусов)
         {
-            double x = foundPoints[i].point.x() - startingPoint.x();
-            double y = foundPoints[i].point.y() - startingPoint.y();
-            double numerator = x * foundPoints[i].firstDeriv.x() + y * foundPoints[i].firstDeriv.y();
-            double denominator = x * foundPoints[i].secondDeriv.x() + y * foundPoints[i].secondDeriv.y() +
-                                 pow(MathUtils::calcRadiusVectorLength(foundPoints[i].firstDeriv), 2);
+            double x = foundPoints[i].x - startingPoint.x();
+            double y = foundPoints[i].y - startingPoint.y();
+            double numerator = x * foundPoints[i].derivs[1].x() + y * foundPoints[i].derivs[1].y();
+            double denominator = x * foundPoints[i].derivs[2].x() + y * foundPoints[i].derivs[2].y() +
+                                 pow(MathUtils::calcRadiusVectorLength(foundPoints[i].derivs[1]), 2);
 
             double pointRealNew = foundPoints[i].parameter - k * numerator / denominator; // Новая точка реального диапазона
 
@@ -184,13 +188,13 @@ CurvePoint FindDistanceBetweenCurves::comparePoints(const std::vector<CurvePoint
     if (points.size() == 1)    // Если в массиве только одна точка, возвращаем её
         return resultPoint;
 
-    double resultVecLen = MathUtils::calcVectorLenght(startingPoint, resultPoint.point);
+    double resultVecLen = MathUtils::calcVectorLenght(startingPoint, resultPoint.x, resultPoint.y);
     double resultCos = cosines[0];
     const double RIGHT_ANGLE = 0.1;    // Допустимое значение прямого угла
 
     for (size_t i = 1; i < points.size(); ++i)
     {
-        double tempVecLen = MathUtils::calcVectorLenght(startingPoint, points[i].point);
+        double tempVecLen = MathUtils::calcVectorLenght(startingPoint, points[i].x, points[i].y);
         double tempCos = cosines[i];
 
         if (RIGHT_ANGLE > resultCos + tempCos) // Если разница косинусов очень маленькая

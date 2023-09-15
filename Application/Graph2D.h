@@ -18,11 +18,8 @@ public:
     // Рисует две кривые
     void drawTwoCurves(const std::pair<std::vector<CurvePoint>, std::vector<CurvePoint>> &twoCurves) const noexcept;
 
-    // Рисует годограф первой производной кривой
-    void drawHodographFirstDeriv(const Curve &curve, const QString &name = "", const QColor &color = QColor(0, 0, 0), const Qt::PenStyle &penStyle = Qt::SolidLine, double width = 1.5) const noexcept;
-
-    // Рисует годограф второй производной кривой
-    void drawHodograpSecondDeriv(const Curve &curve, const QString &name = "", const QColor &color = QColor(0, 0, 0), const Qt::PenStyle &penStyle = Qt::SolidLine, double width = 1.5) const noexcept;
+    // Рисует годограф любой производной кривой
+    void drawHodographDeriv(const Curve &curve, int derivativeOrder, const QString &name = "", const QColor &color = QColor(0, 0, 0), const Qt::PenStyle &penStyle = Qt::SolidLine, double width = 1.5) const noexcept;
 
     // Рисует точку
     void drawPoint(QPointF point, double width = 5, const QColor &color = QColor(0, 0, 0)) const noexcept;
