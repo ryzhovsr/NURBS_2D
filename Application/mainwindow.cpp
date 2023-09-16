@@ -7,11 +7,11 @@
 #include "AlgBasedCurveConjugation.h"
 #include "ResourceApproxAlgs.h"
 
-/*
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->canvas, SIGNAL(mouseDoubleClick(QMouseEvent*)), this, SLOT(doubleClickCanvas(QMouseEvent*)));
 
     const std::vector<QPointF> CONTROL_POINTS   // Контрольные точки определяющего многоугольника
     {
@@ -32,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     canvas.drawCurve(curve1, "Кривая 1", QColor(20, 150, 30));
     canvas.drawDefiningPolygon(curve1.getControlPoints(), "Определяющий многоугольник");
 
-    AlgBasedCurveConjugation approxAlg;
+    AlgBasedIntegralNorm approxAlg;
     Curve curve2 = approxAlg.approximateCurve(curve1, DEGREE - 1);
 
     canvas.drawCurve(curve2, "Кривая 2", QColor(202, 150, 230));
@@ -40,9 +40,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     qDebug() << Metrics::calcHausdorffMetric(curve1, curve2);
 }
-*/
 
-
+/*
 // Пример построения с крылом 1
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -82,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent)
     };
 
     const std::vector<double> WEIGHTS(CONTROL_POINTS.size(), 1);   // Весовые коэффициенты контрольных точек
-    const int CURVE_NUM_POINTS = 10000;   // Кол-во точек, из которых будет состоять кривая
+    const int CURVE_NUM_POINTS = 100;   // Кол-во точек, из которых будет состоять кривая
     const int DEGREE = 24;   // Степень кривой
 
     Curve originalCurve(CONTROL_POINTS, WEIGHTS, DEGREE, CURVE_NUM_POINTS);
@@ -123,7 +122,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //canvas.drawCurve(newCurve_1, "Новая кривая, аппр. интегральным способом", QColor(100, 0, 193), Qt::PenStyle::DashLine);\
 */
-}
+//}
 
 
 /*)
@@ -155,8 +154,14 @@ MainWindow::MainWindow(QWidget *parent)
 }
 */
 
+void MainWindow::doubleClickCanvas(QMouseEvent *event)
+{
+    qDebug() << "\nx =" << ui->canvas->xAxis->pixelToCoord(event->pos().x())
+             << "\ny =" << ui->canvas->yAxis->pixelToCoord(event->pos().y());
+}
+
+
 MainWindow::~MainWindow()
 {
     delete ui;
 }
-

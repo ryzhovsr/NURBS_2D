@@ -14,6 +14,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void doubleClickCanvas(QMouseEvent *event);
+
+
 private:
     Ui::MainWindow *ui;
 };
